@@ -8,7 +8,7 @@ import org.aspectj.lang.annotation.Pointcut;
 
 @Aspect
 public class TimeLogger {
-    @Pointcut("@annotation(time) && within(ru.cbr.*)")
+    @Pointcut("@annotation(time) && execution(* *(..))")
     public void checkExecutionTime(ExecutionTime time) {
     }
 
@@ -20,9 +20,10 @@ public class TimeLogger {
 
         long executionTime = System.currentTimeMillis()-initTime;
         if(executionTime > time.max()) {
-            String methodName = joinPoint.getSignature().toString();
-            System.out.printf("Execution time %6d ms (> %d):   %s%n", executionTime, time.max(), methodName);
+            String methodSignature = joinPoint.getSignature().toString();
+            System.out.printf("Execution time %6d ms (> %d):   %s%n", executionTime, time.max(), methodSignature);
         }
+
         return proceed;
     }
 }
